@@ -39,12 +39,14 @@ def resist(db, inp):
     samfile = pysam.AlignmentFile(sam, 'rb', check_sq=False)
 
     # Making a list for writing output and translate sam to fastq
+    unid = []
     res = []
     for read in samfile.fetch():
-        res.append(read.qname + "\n" + samfile.get_reference_name(read.rname))
         if read.seq is not None:
             with open(filtered, "a") as handle:
                 handle.write("@" + read.qname + "\n" + read.seq + "\n+\n" + read.qual + "\n")
+            unid.append(read.qname)
+        res.append("{}:{}".format(read.qname, samfile.get_reference_name(read.rname)))
 
     print("Only resistome data left")
 
@@ -52,15 +54,28 @@ def resist(db, inp):
     profiling("/mnt/db/db/kraken2/bacteria/", filtered, "resistome identification")
 
     # Update the output-list
-    names = []
+    tres = []
+    name = {}
+    for i in unid:
+        for r in res:
+            v = r.split(":")
+            if re.search(i, r):
+                tres.append(re.sub("resfinder~~~|~~~.+", "", v[1]) + "\n")
+        RES = "".join(tres)
+        name[i] = RES
+        tres.clear()
+
+    # Make the output look pretty
+    names = {}
     kra = "{}_kraken.txt".format(os.path.join(args.outdir, prefix))
     with open(kra) as csvfile:
         reader = csv.reader(csvfile, delimiter = "\t")
         for row in reader:
-            for r in res:
-                if re.search(row[1], r) and row[0] == "C":
-                    names.append(row[2] + "\t\t|\t\t" + re.sub("resfinder~~~|~~~.+", "", r))
-
+            if row[0] == "C":
+                for key, value in name.items():
+                    if row[1] == key:
+                        names[row[2] + "\t\t|\t\t" + key] = value
+        
     # Writing the output list to a pdf file
     pdf = FPDF()
     pdf_out = os.path.join(args.outdir, "{}_resistome_info.pdf".format(prefix))
@@ -69,8 +84,8 @@ def resist(db, inp):
     pdf.cell(200, 10, txt="Resistome", ln=1, align="C")
     pdf.set_font("Arial", size = 10)
     pdf.write(4, "Bacteria (taxID)\t\t|\t\tRead ID\nResistancy\n\n")
-    for l in names:
-        pdf.write(4, l + "\n")
+    for key, value in names.items():
+        pdf.write(4, key + "\n" + value)
     pdf.output(pdf_out, "F")
 
     samfile.close()
