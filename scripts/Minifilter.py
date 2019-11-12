@@ -69,7 +69,7 @@ def resist(db, inp):
     names = {}
     kra = "{}_kraken.txt".format(os.path.join(args.outdir, prefix))
     with open(kra) as csvfile:
-        reader = csv.reader(csvfile, delimiter="\t")
+        reader = csv.reader(csvfile, delimiter = "\t")
         for row in reader:
             if row[0] == "C":
                 for key, value in name.items():
