@@ -2,7 +2,7 @@
 
 # The big one, used for calling all the different parts and making sure everything runs smoothly
 
-import argparse, gzip, sys, os, multiprocessing, re, shutil, pysam
+import argparse, gzip, sys, os, multiprocessing, re, shutil, pysam, csv
 from Bio import SeqIO
 from fpdf import FPDF
 from PyPDF2 import PdfFileMerger, PdfFileReader
@@ -115,6 +115,11 @@ script_dir = os.path.join(directory, "scripts/")
 # Making sure the scripts are found
 sys.path.append(script_dir)
 sys.path.append(tool_dir)
+
+# Function for running kraken
+def profiling(db, inp, thing):
+    print("Running Kraken2 for {}".format(thing))
+    os.system("{} --db {} --report {}_kreport.txt --threads {} --use-names --output {}_kraken.txt {}".format(os.path.join(tool_dir, "Kraken/kraken2"), db, os.path.join(args.outdir, prefix), args.threads, os.path.join(args.outdir, prefix), inp))
 
 # Running first QC, if asked for QC
 if args.QC:
