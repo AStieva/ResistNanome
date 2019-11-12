@@ -21,7 +21,7 @@ def unmapped(ref, inp):
 
     with pysam.AlignmentFile(sam, 'r', check_sq = False) as samfile:
         for read in samfile.fetch():
-            if read.flag == 4:
+            if read.flag == 4 and read.qname is not None and read.seq is not None and read.qual is not None:
                 with open(filtered, "a") as handle:
                     handle.write("@" + read.qname + "\n" + read.seq +"\n+\n" + read.qual + "\n")
 
@@ -38,24 +38,39 @@ def resist(db, inp):
 
     samfile = pysam.AlignmentFile(sam, 'rb', check_sq=False)
 
-    names = []
+    # Making a list for writing output and translate sam to fastq
+    res = []
     for read in samfile.fetch():
-        names.append(read.qname + "\t\t|\t\t" + samfile.get_reference_name(read.rname))
+        res.append(read.qname + "\n" + samfile.get_reference_name(read.rname))
         if read.seq is not None:
             with open(filtered, "a") as handle:
                 handle.write("@" + read.qname + "\n" + read.seq + "\n+\n" + read.qual + "\n")
 
     print("Only resistome data left")
 
+    # Using the kraken2 formula from wrapper for taxonomisation
+    profiling("/mnt/db/db/kraken2/bacteria/", filtered, "resistome identification")
+
+    # Update the output-list
+    names = []
+    kra = "{}_kraken.txt".format(os.path.join(args.outdir, prefix))
+    with open(kra) as csvfile:
+        reader = csv.reader(csvfile, delimiter = "\t")
+        for row in reader:
+            for r in res:
+                if re.search(row[1], r) and row[0] == "C":
+                    names.append(row[2] + "\t\t|\t\t" + re.sub("resfinder~~~|~~~.+", "", r))
+
+    # Writing the output list to a pdf file
     pdf = FPDF()
     pdf_out = os.path.join(args.outdir, "{}_resistome_info.pdf".format(prefix))
     pdf.add_page(orientation="P")
     pdf.set_font("Arial", style="B", size=10)
     pdf.cell(200, 10, txt="Resistome", ln=1, align="C")
-    pdf.set_font("Arial", style = "U", size = 10)
-    pdf.write(4, "Read ID\t\t|\t\tResistancy\n\n")
+    pdf.set_font("Arial", size = 10)
+    pdf.write(4, "Bacteria (taxID)\t\t|\t\tRead ID\nResistancy\n\n")
     for l in names:
-        pdf.write(4, re.sub("resfinder~~~|~~~.+", "", l) + "\n")
+        pdf.write(4, l + "\n")
     pdf.output(pdf_out, "F")
 
     samfile.close()
