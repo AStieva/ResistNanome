@@ -16,9 +16,9 @@ def unmapped(ref, inp):
     filtered = os.path.join(args.outdir, "temp_novert.fastq")
 
     # Using minimap2 to align reads to vertebrate db
-    # Using pysam to filter and translate to fastq
     os.system("{} -ax map-ont {} {} | grep -v '^@' > {}".format(os.path.join(tool_dir, "Minimap2"), ref, inp, sam))
 
+    # Using pysam to filter and translate to fastq
     with pysam.AlignmentFile(sam, 'r', check_sq = False) as samfile:
         for read in samfile.fetch():
             if read.flag == 4 and read.qname is not None and read.seq is not None and read.qual is not None:
