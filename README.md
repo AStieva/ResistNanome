@@ -31,6 +31,7 @@ usage: ./wrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [option
 -ar, --resistome  Execute the resistome analysis/antibiotic resistance screening
 -cs, --taxonomy   Execute the bacterial community screening
 --gz              gzip-ing the fastq file(s) left at the end
+```
 
 ## Implemented tools
 
