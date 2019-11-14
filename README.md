@@ -18,7 +18,7 @@ The output from this will be a pdf file which gives the name of the bacteria, wh
 usage: ./wrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [options]
 
 -h, --help        Show this help message and exit
--i, --inp         Place here the input files, in fastq or fastq.gz format
+-i, --inp         Set the input files, in fastq or fastq.gz format
 -o, --outdir      Set the output directory, please make sure to input the whole path
 -p, --prefix      Set the prefix for all output files, default is the name of the input files. This name can't contain 'temp_' as this is used to define temporary data
 -t, --threads     Set the number of threads used, default is maximum available up to 16 threads
