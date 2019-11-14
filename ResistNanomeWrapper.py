@@ -19,14 +19,14 @@ parser = argparse.ArgumentParser(description = "A pipeline to make it easy to ex
 parser.add_argument("--inp", "-i",
                     action = "store",
                     required = True,
-                    help = "Place here the input files, in fastq or fastq.gz format")
+                    help = "Set the input files, in fastq or fastq.gz format")
 parser.add_argument("--outdir", "-o",
                     action = "store",
                     required = True,
                     help = "Set the output directory, please make sure to input the whole path")
 parser.add_argument("--prefix", "-p",
                     action = "store",
-                    help = "Set the prefix for all output files, default is the name of the input files. This name can't start with 'temp_' as this is used to define temporary data")
+                    help = "Set the prefix for all output files, default is the name of the input files. This name can't contain 'temp_' as this is used to define temporary data")
 parser.add_argument("--threads", "-t",
                     default = cpu_threads(16),
                     required = False,
@@ -65,11 +65,11 @@ parser.add_argument("--resistome", "-ar",
 parser.add_argument("--taxonomy", "-cs",
                     action = "store_true",
                     default = False,
-                    help = "Execute the bacterial community screening")
+                    help = "Execute the bacterial community screening/antibiotic resistance screening")
 parser.add_argument("--gz",
                     action = "store_true",
                     default = False,
-                    help = "gzip-ing the last input file")
+                    help = "gzip-ing the fastq file(s) left at the end")
 args = parser.parse_args()
 
 # If filtlong is not called, but the minlen is, it won't just run without filtlong
