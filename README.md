@@ -61,5 +61,28 @@ Tool for alignment.
 
 [Github](https://github.com/lh3/minimap2)
 
+### Kraken2
+ Derrick E. Wood, Jennifer Lu, Ben Langmead, Improved metagenomic analysis with Kraken 2, bioRxiv 762302 [paper](https://doi.org/10.1101/762302)
+ 
+ Tool for taxonomisation
+ 
+ [Github](https://github.com/DerrickWood/kraken2)
+
+### PyFPDF
+Olivier Plathey [FPDF](http://www.fpdf.org/) Original FPDF for PHP
+Max Pat, Mariano Reingart, Roman Kharin [readthedocs](https://pyfpdf.readthedocs.io/en/latest/) Python version of FPDF. Original python version by Max Pat, forked version used.
+
+Tool for making PDF-files with code. Used to write output directly to PDF.
+
+[Github FPDF](https://github.com/Setasign/FPDF)
+[Github Python](https://github.com/reingart/pyfpdf)
+
+### pysam
+Andreas Heger, Kevin Jacobs et al. 2009 [readthedocs](https://pysam.readthedocs.io/en/latest/#)
+
+Tool for manipulating SAM files.
+
+[Github](https://github.com/pysam-developers/pysam)
+
 -------------------------------------------
 ##### This page is still under construction
