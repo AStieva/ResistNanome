@@ -65,11 +65,18 @@ Tool for alignment.
 [Github](https://github.com/lh3/minimap2)
 
 ### Kraken2
- Derrick E. Wood, Jennifer Lu, Ben Langmead, Improved metagenomic analysis with Kraken 2, bioRxiv 762302 [paper](https://doi.org/10.1101/762302)
+Derrick E. Wood, Jennifer Lu, Ben Langmead, Improved metagenomic analysis with Kraken 2, bioRxiv 762302 [paper](https://doi.org/10.1101/762302)
  
- Tool for taxonomisation
+Tool for community screening.
  
- [Github](https://github.com/DerrickWood/kraken2)
+[Github](https://github.com/DerrickWood/kraken2)
+ 
+### Bracken
+Jennifer Lu, Florian P. Breitwieser, Peter Thielen, Steven L. Salzberg, Bracken: estimating species abundance in metagenomics data, Article in Computer Science, published January 2017, [paper](https://peerj.com/articles/cs-104/)
+
+Tool for giving an abundance estimate based of a kraken(2) report.
+
+[Github](https://github.com/jenniferlu717/Bracken)
 
 ### PyFPDF
 Olivier Plathey [FPDF](http://www.fpdf.org/) Original FPDF for PHP
