@@ -35,6 +35,31 @@ usage: ./wrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [option
 
 ## Implemented tools
 
+### NanoQC
+Wouter De Coster, Svenn D’Hert, Darrin T Schultz, Marc Cruts, Christine Van Broeckhoven, NanoPack: visualizing and processing long-read sequencing data, Bioinformatics, Volume 34, Issue 15, 01 August 2018, Pages 2666–2669, [paper](https://doi.org/10.1093/bioinformatics/bty149)
 
+Tool for creating Quality Controll graphs.
 
+[Github](https://github.com/wdecoster/nanoQC)
+
+### Filtlong
+Ryan Wick filtlong [Github](https://github.com/rrwick/Filtlong)
+
+Tool for filtering Nanopore data for length and quality.
+
+### Porechop
+Ryan R. Wick, Louise M. Judd, Claire L. Gorrie, Kathryn E. Holt, Completing bacterial genome assemblies with multiplex MinION sequencing, MICROBIAL GENOMICS Volume 3, Issue 10, First Published: 14 September 2017 [paper](https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000132)
+
+Tool for demultiplexing and cutting off barcodes.
+
+[Github](https://github.com/rrwick/Porechop)
+
+### Minimap2
+Heng Li, Minimap2: pairwise alignment for nucleotide sequences , Bioinformatics, Volume 34, Issue 18, 15 September 2018, Pages 3094–3100, [paper](https://doi.org/10.1093/bioinformatics/bty191)
+
+Tool for alignment.
+
+[Github](https://github.com/lh3/minimap2)
+
+-------------------------------------------
 ##### This page is still under construction
