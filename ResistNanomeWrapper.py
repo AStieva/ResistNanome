@@ -71,7 +71,7 @@ parser.add_argument("--resistome", "-ar",
 parser.add_argument("--taxonomy", "-cs",
                     action = "store_true",
                     default = False,
-                    help = "Execute the bacterial community screening, output on genome level")
+                    help = "Execute the bacterial community screening, output set with --lvl")
 parser.add_argument("--gz", "-gz",
                     action = "store_true",
                     default = False,
