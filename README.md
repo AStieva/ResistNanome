@@ -98,5 +98,9 @@ Tool for manipulating SAM files.
 ### KMA
 Philip T.L.C. Clausen, Frank M. Aarestrup & Ole Lund, "Rapid and precise alignment of raw reads against redundant databases with KMA", BMC Bioinformatics, 2018;19:307, [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2336-6)
 
+Tool for k-mer alignment. Often used for determenation of the resistome.
+
+[bitbucket](https://bitbucket.org/genomicepidemiology/kma/src/master/)
+
 -------------------------------------------
 ##### This page is still under construction
