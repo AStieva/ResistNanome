@@ -39,7 +39,7 @@ usage: ./wrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [option
 ## Implemented tools
 
 ### NanoQC
-Wouter De Coster, Svenn D’Hert, Darrin T Schultz, Marc Cruts, Christine Van Broeckhoven, NanoPack: visualizing and processing long-read sequencing data, Bioinformatics, Volume 34, Issue 15, 01 August 2018, Pages 2666–2669, [paper](https://doi.org/10.1093/bioinformatics/bty149)
+Wouter De Coster, Svenn D’Hert, Darrin T Schultz, Marc Cruts, Christine Van Broeckhoven, "NanoPack: visualizing and processing long-read sequencing data", Bioinformatics, Volume 34, Issue 15, 01 August 2018, Pages 2666–2669, [paper](https://doi.org/10.1093/bioinformatics/bty149)
 
 Tool for creating Quality Controll graphs.
 
@@ -51,28 +51,28 @@ Ryan Wick filtlong [Github](https://github.com/rrwick/Filtlong)
 Tool for filtering Nanopore data for length and quality.
 
 ### Porechop
-Ryan R. Wick, Louise M. Judd, Claire L. Gorrie, Kathryn E. Holt, Completing bacterial genome assemblies with multiplex MinION sequencing, MICROBIAL GENOMICS Volume 3, Issue 10, First Published: 14 September 2017 [paper](https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000132)
+Ryan R. Wick, Louise M. Judd, Claire L. Gorrie, Kathryn E. Holt, "Completing bacterial genome assemblies with multiplex MinION sequencing", MICROBIAL GENOMICS Volume 3, Issue 10, First Published: 14 September 2017 [paper](https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000132)
 
 Tool for demultiplexing and cutting off barcodes.
 
 [Github](https://github.com/rrwick/Porechop)
 
 ### Minimap2
-Heng Li, Minimap2: pairwise alignment for nucleotide sequences , Bioinformatics, Volume 34, Issue 18, 15 September 2018, Pages 3094–3100, [paper](https://doi.org/10.1093/bioinformatics/bty191)
+Heng Li, "Minimap2: pairwise alignment for nucleotide sequences", Bioinformatics, Volume 34, Issue 18, 15 September 2018, Pages 3094–3100, [paper](https://doi.org/10.1093/bioinformatics/bty191)
 
 Tool for alignment.
 
 [Github](https://github.com/lh3/minimap2)
 
 ### Kraken2
-Derrick E. Wood, Jennifer Lu, Ben Langmead, Improved metagenomic analysis with Kraken 2, bioRxiv 762302 [paper](https://doi.org/10.1101/762302)
+Derrick E. Wood, Jennifer Lu, Ben Langmead, "Improved metagenomic analysis with Kraken 2", bioRxiv 762302 [paper](https://doi.org/10.1101/762302)
  
 Tool for community screening.
  
 [Github](https://github.com/DerrickWood/kraken2)
  
 ### Bracken
-Jennifer Lu, Florian P. Breitwieser, Peter Thielen, Steven L. Salzberg, Bracken: estimating species abundance in metagenomics data, Article in Computer Science, published January 2017, [paper](https://peerj.com/articles/cs-104/)
+Jennifer Lu, Florian P. Breitwieser, Peter Thielen, Steven L. Salzberg, "Bracken: estimating species abundance in metagenomics data", Article in Computer Science, published January 2017, [paper](https://peerj.com/articles/cs-104/)
 
 Tool for giving an abundance estimate based of a kraken(2) report.
 
@@ -94,6 +94,9 @@ Andreas Heger, Kevin Jacobs et al. 2009 [readthedocs](https://pysam.readthedocs.
 Tool for manipulating SAM files.
 
 [Github](https://github.com/pysam-developers/pysam)
+
+### KMA
+Philip T.L.C. Clausen, Frank M. Aarestrup & Ole Lund, "Rapid and precise alignment of raw reads against redundant databases with KMA", BMC Bioinformatics, 2018;19:307, [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2336-6)
 
 -------------------------------------------
 ##### This page is still under construction
