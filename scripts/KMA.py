@@ -55,34 +55,17 @@ def resistome(inp, db, phred):
             if re.search(T[1], N):
                 Nlist.append(N)
 
-    # Writing a fastq file with only resistome-files, taking out the resistome genes. output in fasta
+    # Writing a fastq file with only resistome-files
     filtered = os.path.join(args.outdir, "temp_resistome.fastq")
-    for record in SeqIO.parse(inp, "fastq"):
-        filt = {record.id : record.seq}
-    for n in Nlist:
-        i = n.split(":")
-        start = int(i[2]) - 1
-        end = int(i[3]) - 1
-        for key, val in filt:
-            if i[0] == key:
-                for x, y in enumerate(val):
-                    if x == range(start, end):
-                        val[x] = "N"
-    for key, val in filt:
+    filt = []
+    for n in Nlist: # herschrijven
+        N = n.split(":")
+        for i in SeqIO.parse(inp, "fastq"):
+            if N[0] == i.id:
+                filt.append(i)
+    for f in filt:
         with open(filtered, "a") as handle:
-            SeqIO.write(val, key, handle, "fastq")
-
-    # # Writing a fastq file with only resistome-files
-    # filtered = os.path.join(args.outdir, "temp_resistome.fastq")
-    # filt = []
-    # for n in Nlist: # herschrijven
-    #     N = n.split(":")
-    #     for i in SeqIO.parse(inp, "fastq"):
-    #         if N[0] == i.id:
-    #             filt.append(i)
-    # for f in filt:
-    #     with open(filtered, "a") as handle:
-    #         SeqIO.write(f, handle, "fastq")
+            SeqIO.write(f, handle, "fastq")
 
 
     # Running Kraken2
