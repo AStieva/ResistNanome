@@ -5,7 +5,6 @@
 import argparse, gzip, sys, os, multiprocessing, re, shutil, pysam, csv, datetime, threading
 from numpy import median
 from Bio import SeqIO
-from PyPDF2 import PdfFileMerger, PdfFileReader
 
 # Setting a default maximum of threads, even if maximum is higher
 def cpu_threads(max_threads):
@@ -68,6 +67,16 @@ parser.add_argument("--resistome", "-ar",
                     action = "store_true",
                     default = False,
                     help = "Execute the resistome analysis")
+parser.add_argument("--repN", "-N",
+                    action="store_true",
+                    default=False,
+                    required=False,
+                    help="Replace the resistancy gene with a series of N. This can take a long time")
+parser.add_argument("--phred",
+                    action="store",
+                    default=0,
+                    required=False,
+                    help="The option of giving a minimum phred score for resistome filtering")
 parser.add_argument("--taxonomy", "-cs",
                     action = "store_true",
                     default = False,
@@ -87,6 +96,17 @@ if args.minlen is not 1000 and args.filtlong == False:
         sys.exit()
     else:
         print("Continuing without filtlong")
+        
+# If KMA is not called, but the repN is, it won't just run without KMA
+if args.repN is True and args.resistome is False:
+    print(
+        "Called for replacing resistome genes, but resistome analysis isn't called. Continue without resistome analysis?")
+    rep = input("(Y/N) ")
+    if rep == "N" or rep == "n" or rep == "No" or rep == "no":
+        print("To implement resistome analysis, please add --resistome or -ar to your arguments")
+        sys.exit()
+    else:
+        print("Continuing without resistome analysis")
 
 # Demux disclamer
 if args.demux and (args.filtlong or args.host or args.resistome or args.taxonomy):
@@ -127,7 +147,7 @@ script_dir = os.path.join(directory, "scripts/")
 
 # Making sure the scripts are found
 sys.path.append(script_dir)
-sys.path.append(os.path.join(tool_dir, "pyfpdf"))
+sys.path.append(os.path.join(tool_dir, "PyFPDF", "fpdf", "fpdf.py"))
 from fpdf import FPDF
 
 # Function for running kraken2 and bracken
@@ -136,6 +156,7 @@ def profiling(db, inp, part, id):
     os.system("{} --db {} --report {}_{}kreport.txt --threads {} --use-names --output {}_{}kraken.txt {}".format(
         os.path.join(tool_dir, "Kraken/kraken2"), db, os.path.join(args.outdir, prefix), id, args.threads,
         os.path.join(args.outdir, prefix), id, inp))
+    
 def abundance(db, id, len, level):
     if isinstance(level, list):
         for lvl in level:
@@ -152,17 +173,19 @@ def abundance(db, id, len, level):
                                                                                   os.path.join(args.outdir, prefix), id,
                                                                                   os.path.join(args.outdir, prefix), id,
                                                                                   len, level))
+# noinspection PyUnboundLocalVariable
 def med_round(data):
     len_read = []
     for seq in SeqIO.parse(data, "fastq"):
         len_read.append(int(len(seq)))
-    med = int(median(len_read))
+    med = round(median(len_read))
     smed = str(med)
     if len(smed) >= 4 and med > 2549:
-        x = -3
+        step = -3
     elif len(smed) == 3 or med <= 2549:
-        x = -2
-    return int(round(med, x))
+        step = -2
+    rounding = round(med, step)
+    return int(rounding)
 
 # Running first QC, if asked for QC
 if args.QC:
@@ -226,28 +249,78 @@ if args.host and not args.demux:
     f.write(str(dt) + "\tStart host filtering\n")
     f.close()
     from Minifilter import unmapped
-    unmapped(os.path.abspath("/mnt/db/db/mash_db/"), indata)
+    unmapped(os.path.abspath("./database/mash_db/"), indata)
     indata = os.path.join(args.outdir, "temp_novert.fastq")
 
 # Running resistome analysis and/or community profiling, in multithreading
 def resistome():
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
-    f.write(str(dt) + "\tStart determination of resistome\n")
+    f.write(str(dt) + "\tStart determination of resistome (res)\n")
     f.close()
-    from Minifilter import resist
-    resist(os.path.abspath("/mnt/db/db/resistome/resfinder.fasta"), indata)
-    resist_indata = os.path.join(args.outdir, "temp_resistome.fastq")
+    from KMA import resistome
+    resistome(indata, os.path.abspath("/mnt/docker/ResistNanome/db/kma_db/ResFinder"), args.phred)
+    resist_indata = os.path.join(args.outdir, "temp_resistome.fasta")
     if not os.path.isfile(resist_indata):
         print("There was'n any antibiotic resistance found!")
+
 def taxonomy():
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
-    f.write(str(dt) + "\tStart taxonomy\n")
+    f.write(str(dt) + "\tStart taxonomy (tax)\n")
     f.close()
     profiling("/mnt/docker/ResistNanome/db/Kraken2_db/", indata, "taxonomy", "t")
     med = int(med_round(indata))
     abundance("/mnt/docker/ResistNanome/db/Kraken2_db/", "t", med, "G")
+
+    com = []
+    kra = "{}_tkraken.txt".format(os.path.join(args.outdir, prefix))
+    with open(kra, "rt") as csvf:
+        reader = csv.reader(csvf, delimiter="\t")
+        for read in reader:
+            if read[0] == "C":
+                com.append(read[1] + ":" + read[2])
+
+    tax = []
+    taxduo = []
+    if type(args.lvl) is list:
+        bra = "{}_S_tbracken.txt".format(os.path.join(args.outdir, prefix))
+    else:
+        bra = "{}_tbracken.txt".format(os.path.join(args.outdir, prefix))
+    for b in com:
+        tt = b.split(":")
+        ID = tt[1].split(" ")
+        lID = list(ID[-1])
+        lID.pop()
+        sID = "".join(lID)
+        with open(bra, "rt") as csvfi:
+            reader = csv.reader(csvfi, delimiter="\t")
+            for col in reader:
+                if col[1] == sID:
+                    taxduo.append("{}:{}".format(b, col[-1]))
+    for du in taxduo:
+        if du not in tax:
+            tax.append(du)
+
+    print("Writing taxonomy output")
+    taxinfo = []
+    for inf in tax:
+        o = inf.split(":")
+        perc = float(o[-1]) / 100
+        peround = "{0:.6f}".format(perc)
+        taxinfo.append("{}\n\t\t{} - {}%\n".format(o[0], o[1], peround))
+
+    Tlog = os.path.join(args.outdir, "{}_taxonomy_output.txt".format(prefix))
+    t = open(Tlog, "a")
+    t.write("Taxonomy")
+    t.write("\nRead\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
+    for i in taxinfo:
+        t.write(i)
+    t.close()
+    f = open(RNlog, "a")
+    dt = datetime.datetime.now()
+    f.write(str(dt) + "\tTaxonomy finished\n")
+    f.close()
 
 if args.resistome and args.taxonomy and not args.demux:
     # Creating threads
@@ -264,35 +337,58 @@ elif args.resistome and not args.demux and not args.taxonomy:
 elif args.taxonomy and not args.demux and not args.resistome:
     taxonomy()
 
-f = open(RNlog, "a")
-dt = datetime.datetime.now()
-f.write(str(dt) + "\tStart cleaning output\n")
-f.close()
-
-# Merging all pdf-files or changing the name if there's only one
+# Merging all output-files to one PDF
 if not args.demux:
     outlist = sorted(os.listdir(args.outdir))
     Pdf = []
     for i in outlist:
-        if re.search(".+\.pdf", i) and not re.search(".+_ResistNanome\.pdf", i):
+        if re.search("output", i):
             ii = os.path.join(args.outdir, i)
             Pdf.append(ii)
-    if Pdf:
-        out = os.path.join(args.outdir, "{}_ResistNanome.pdf".format(prefix))
-        try:
-            Pdf[1]
-        except IndexError:
-            os.rename(Pdf[0], out)
-        else:
-            if not os.path.exists(out):
-                open(out, "x").close()
-            merge = PdfFileMerger()
-            for path in Pdf:
-                merge.append(PdfFileReader(path))
-            merge.append(out)
-            merge.close()
-#            for path in Pdf:
-#                os.remove(path)
+
+    pdf = FPDF()
+    out = os.path.join(args.outdir, "{}_ResistNanome.pdf".format(prefix))
+    if not os.path.exists(out):
+        open(out, "x").close()
+    textlist = []
+    try:
+        Pdf[1]
+    except IndexError:
+        with open(Pdf[0], "r") as f:
+            for row in f.readlines():
+                textlist.append(row)
+        pdf.add_page(orientation="P")
+        pdf.set_font("Arial", size=10)
+        for df in textlist:
+            pdf.write(4, df)
+        pdf.output(out, "F")
+    else:
+        textlist = []
+        for path in Pdf:
+            p = open(path, "r")
+            pdf.add_page(orientation="P")
+            lines = p.readlines()
+            for row in lines:
+                if row == lines[0]:
+                    pdf.set_font("Arial", "BU", size=10)
+                    pdf.write(4, row)
+                elif re.search("Read|Name", row):
+                    pdf.set_font("Arial", "B", size=10)
+                    pdf.write(4, row)
+                else:
+                    pdf.set_font("Arial", size=10)
+                    pdf.write(4, row)
+            p.close()
+        pdf.output(out, "F")
+
+    if not args.keep:
+        for path in Pdf:
+            os.remove(path)
+
+f = open(RNlog, "a")
+dt = datetime.datetime.now()
+f.write(str(dt) + "\tStart cleaning output\n")
+f.close()
 
 # The temporary output directory can be deleted, if keep argument is called, this argument will be false, so all data will be kept
 if not args.keep:
