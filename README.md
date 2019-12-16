@@ -31,9 +31,12 @@ usage: ./wrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [option
 --minlen          The option to put in the minimum length of the reads saved in bp, default is 1000. Needs filtlong to be used
 -qc, --QC         Execute the quality control
 --host            Execute the host contamination screening, the database has a lot of vertebrate, but if yours isn't in it, please feel free to add it
+--lvl             The classification level for determining the abundance levels with Bracken. Default is all. Options are: K (kingdom level), P (phylum), C (class), O (order), F (family), G (genus), and S (species)
 -ar, --resistome  Execute the resistome analysis/antibiotic resistance screening
+-N, --repN        Replace the resistancy gene with a series of N. This can take a long time (up to multiple days for a few GB data)
+--phred           The option of giving a minimum phred score for resistome filtering
 -cs, --taxonomy   Execute the bacterial community screening
---gz              gzip-ing the fastq file(s) left at the end
+-gz, --gz         gzip-ing the fastq file(s) left at the end
 ```
 
 ## Implemented tools
@@ -43,10 +46,17 @@ Wouter De Coster, Svenn D’Hert, Darrin T Schultz, Marc Cruts, Christine Van Br
 
 Tool for creating Quality Controll graphs.
 
-[Github](https://github.com/wdecoster/nanoQC)
+[GitHub](https://github.com/wdecoster/nanoQC)
+
+#### bokeh
+[Information page](https://docs.bokeh.org/en/latest/index.html)
+
+Nanoqc uses bokeh for the visualisation
+
+[GitHub](https://github.com/bokeh/bokeh)
 
 ### Filtlong
-Ryan Wick filtlong [Github](https://github.com/rrwick/Filtlong)
+Ryan Wick filtlong [GitHub](https://github.com/rrwick/Filtlong)
 
 Tool for filtering Nanopore data for length and quality.
 
@@ -55,28 +65,28 @@ Ryan R. Wick, Louise M. Judd, Claire L. Gorrie, Kathryn E. Holt, "Completing bac
 
 Tool for demultiplexing and cutting off barcodes.
 
-[Github](https://github.com/rrwick/Porechop)
+[GitHub](https://github.com/rrwick/Porechop)
 
 ### Minimap2
 Heng Li, "Minimap2: pairwise alignment for nucleotide sequences", Bioinformatics, Volume 34, Issue 18, 15 September 2018, Pages 3094–3100, [paper](https://doi.org/10.1093/bioinformatics/bty191)
 
 Tool for alignment.
 
-[Github](https://github.com/lh3/minimap2)
+[GitHub](https://github.com/lh3/minimap2)
 
 ### Kraken2
 Derrick E. Wood, Jennifer Lu, Ben Langmead, "Improved metagenomic analysis with Kraken 2", bioRxiv 762302 [paper](https://doi.org/10.1101/762302)
  
 Tool for community screening.
  
-[Github](https://github.com/DerrickWood/kraken2)
+[GitHub](https://github.com/DerrickWood/kraken2)
  
 ### Bracken
 Jennifer Lu, Florian P. Breitwieser, Peter Thielen, Steven L. Salzberg, "Bracken: estimating species abundance in metagenomics data", Article in Computer Science, published January 2017, [paper](https://peerj.com/articles/cs-104/)
 
 Tool for giving an abundance estimate based of a kraken(2) report.
 
-[Github](https://github.com/jenniferlu717/Bracken)
+[GitHub](https://github.com/jenniferlu717/Bracken)
 
 ### PyFPDF
 Olivier Plathey [FPDF](http://www.fpdf.org/) Original FPDF for PHP
@@ -84,23 +94,23 @@ Max Pat, Mariano Reingart, Roman Kharin [readthedocs](https://pyfpdf.readthedocs
 
 Tool for making PDF-files with code. Used to write output directly to PDF.
 
-[Github FPDF](https://github.com/Setasign/FPDF)
+[GitHub FPDF](https://github.com/Setasign/FPDF)
 
-[Github Python](https://github.com/reingart/pyfpdf)
+[GitHub Python](https://github.com/reingart/pyfpdf)
 
 ### pysam
 Andreas Heger, Kevin Jacobs et al. 2009 [readthedocs](https://pysam.readthedocs.io/en/latest/#)
 
 Tool for manipulating SAM files.
 
-[Github](https://github.com/pysam-developers/pysam)
+[GitHub](https://github.com/pysam-developers/pysam)
 
 ### KMA
 Philip T.L.C. Clausen, Frank M. Aarestrup & Ole Lund, "Rapid and precise alignment of raw reads against redundant databases with KMA", BMC Bioinformatics, 2018;19:307, [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2336-6)
 
 Tool for k-mer alignment. Often used for determenation of the resistome.
 
-[bitbucket](https://bitbucket.org/genomicepidemiology/kma/src/master/)
+[Bitbucket](https://bitbucket.org/genomicepidemiology/kma/src/master/)
 
 -------------------------------------------
 ##### This page is still under construction
