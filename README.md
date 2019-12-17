@@ -48,12 +48,12 @@ Tool for creating Quality Controll graphs.
 
 [GitHub](https://github.com/wdecoster/nanoQC)
 
-  #### bokeh
-  [Information page](https://docs.bokeh.org/en/latest/index.html)
+>#### bokeh
+>[Information page](https://docs.bokeh.org/en/latest/index.html)
 
-  Nanoqc uses bokeh for the visualisation
+>Nanoqc uses bokeh for the visualisation
 
-  [GitHub](https://github.com/bokeh/bokeh)
+>[GitHub](https://github.com/bokeh/bokeh)
 
 ### Filtlong
 Ryan Wick filtlong [GitHub](https://github.com/rrwick/Filtlong)
