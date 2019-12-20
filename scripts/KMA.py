@@ -156,17 +156,26 @@ def resistome(inp, db, phred):
     for du in resduo:
         if du not in resinfo:
             resinfo.append(du)
-
+            
+    resinfo.sort()           
     print("Writing resistome output")
+    routput = os.path.join(args.outdir, "{}_resistome_output.txt".format(prefix))
+    rr = open(routput, "a")
+    rr.write("Read\tResistancy gene\tName (tax ID)\tPercentage of bacteria\n")
+    rr.close()
     resi = []
-    for inf in resinfo:
+    for e, inf in enumerate(resinfo):
         o = inf.split(":")
-        perc = float(o[-1]) / 100
+        perc = float(o[0]) / 100
         peround = "{0:.6f}".format(perc)
-        resi.append("{}\t|\t{}\n\t\t{} - {}%\n".format(o[0], o[1], o[2], peround))
+        if e<= 9:
+            resi.append("{}\t|\t{}\n\t\t{} - {}%\n".format(o[1], o[2], o[3], peround))
+        rr = open(routput, "a")
+        rr.write("{}\t{}\t{}\t{}".format(o[1], o[2], o[3], peround))
+        rr.close()
 
-    Rlog = os.path.join(args.outdir, "{}_resistome_output.txt".format(prefix))
-    t = open(Rlog, "a")
+    rlog = os.path.join(args.outdir, "temp_resistome_topout.txt".format(prefix))
+    t = open(rlog, "a")
     t.write("Resistome")
     t.write("\nRead\t|\tResistancy gene\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
     for r in resi:
