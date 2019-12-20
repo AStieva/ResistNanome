@@ -173,7 +173,7 @@ def abundance(db, id, len, level):
                                                                                   os.path.join(args.outdir, prefix), id,
                                                                                   os.path.join(args.outdir, prefix), id,
                                                                                   len, level))
-# noinspection PyUnboundLocalVariable
+
 def med_round(data):
     len_read = []
     for seq in SeqIO.parse(data, "fastq"):
@@ -262,7 +262,7 @@ def resistome():
     resistome(indata, os.path.abspath(os.path.join(lib_dir, "KMA_ResFinder")), args.phred)
     resist_indata = os.path.join(args.outdir, "temp_resistome.fasta")
     if not os.path.isfile(resist_indata):
-        print("There was'n any antibiotic resistance found!")
+        print("There wasn't any antibiotic resistance found!")
 
 def taxonomy():
     f = open(RNlog, "a")
@@ -302,21 +302,32 @@ def taxonomy():
         if du not in tax:
             tax.append(du)
 
+    tax.sort(reverse = True)
+    
     print("Writing taxonomy output")
+    toutput = os.path.join(args.outdir, "{}_taxonomy_output.txt".format(prefix))
+    tt = open(toutput, "a")
+    tt.write("Read\tName (tax ID)\tPercentage of bacteria\n")
+    tt.close()
     taxinfo = []
-    for inf in tax:
+    for e, inf in enumerate(tax):
         o = inf.split(":")
         perc = float(o[-1]) / 100
         peround = "{0:.6f}".format(perc)
-        taxinfo.append("{}\n\t\t{} - {}%\n".format(o[0], o[1], peround))
+        if e <= 9:
+            taxinfo.append("{}\n\t\t{} - {}%\n".format(o[1], o[2], peround))
+        tt = open(toutput, "a")
+        tt.write("{}\t{}\t{}\n".format(o[1], o[2], peround))
+        tt.close()            
 
-    Tlog = os.path.join(args.outdir, "{}_taxonomy_output.txt".format(prefix))
-    t = open(Tlog, "a")
+    tlog = os.path.join(args.outdir, "temp_taxonomy_topout.txt")
+    t = open(tlog, "a")
     t.write("Taxonomy")
     t.write("\nRead\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
     for i in taxinfo:
         t.write(i)
     t.close()
+
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
     f.write(str(dt) + "\tTaxonomy finished\n")
@@ -355,15 +366,19 @@ if not args.demux:
         Pdf[1]
     except IndexError:
         with open(Pdf[0], "r") as f:
+            pdf.add_page(orientation="P")
             for row in f.readlines():
-                textlist.append(row)
-        pdf.add_page(orientation="P")
-        pdf.set_font("Arial", size=10)
-        for df in textlist:
-            pdf.write(4, df)
+                if row == f.readlines[0]:
+                    pdf.set_font("Arial", "BU", size=10)
+                    pdf.write(4, row)
+                elif re.search("Read|Name", row):
+                    pdf.set_font("Arial", "B", size=10)
+                    pdf.write(4, row)
+                else:
+                    pdf.set_font("Arial", size=10)
+                    pdf.write(4, row)
         pdf.output(out, "F")
     else:
-        textlist = []
         for path in Pdf:
             p = open(path, "r")
             pdf.add_page(orientation="P")
