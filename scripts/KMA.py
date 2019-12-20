@@ -109,12 +109,12 @@ def resistome(inp, db, phred):
     f.close()
 
     # Running Kraken2
-    profiling("/mnt/docker/ResistNanome/db/Kraken2_db/", filtered, "resistome identification", "r")
+    profiling(os.path.abspath(os.path.join(lib_dir, "/Kraken2_Nanodb/")), filtered, "resistome identification", "r")
 
     # Bracken addition
     med = med_round(inp)
 
-    abundance("/mnt/docker/ResistNanome/db/Kraken2_db/", "r", med, args.lvl)
+    abundance(os.path.abspath(os.path.join(lib_dir, "/Kraken2_Nanodb/")), "r", med, args.lvl)
 
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
