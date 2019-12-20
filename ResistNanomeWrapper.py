@@ -249,7 +249,7 @@ if args.host and not args.demux:
     f.write(str(dt) + "\tStart host filtering\n")
     f.close()
     from Minifilter import unmapped
-    unmapped(os.path.abspath("./database/mash_db/"), indata)
+    unmapped(os.path.abspath(os.path.join(lib_dir, "/mash_db/")), indata)
     indata = os.path.join(args.outdir, "temp_novert.fastq")
 
 # Running resistome analysis and/or community profiling, in multithreading
@@ -259,7 +259,7 @@ def resistome():
     f.write(str(dt) + "\tStart determination of resistome (res)\n")
     f.close()
     from KMA import resistome
-    resistome(indata, os.path.abspath("/mnt/docker/ResistNanome/db/kma_db/ResFinder"), args.phred)
+    resistome(indata, os.path.abspath(os.path.join(lib_dir, "KMA_ResFinder")), args.phred)
     resist_indata = os.path.join(args.outdir, "temp_resistome.fasta")
     if not os.path.isfile(resist_indata):
         print("There was'n any antibiotic resistance found!")
@@ -269,9 +269,9 @@ def taxonomy():
     dt = datetime.datetime.now()
     f.write(str(dt) + "\tStart taxonomy (tax)\n")
     f.close()
-    profiling("/mnt/docker/ResistNanome/db/Kraken2_db/", indata, "taxonomy", "t")
+    profiling(os.path.abspath(os.path.join(lib_dir, "/Kraken2_Nanodb/")), indata, "taxonomy", "t")
     med = int(med_round(indata))
-    abundance("/mnt/docker/ResistNanome/db/Kraken2_db/", "t", med, "G")
+    abundance(os.path.abspath(os.path.join(lib_dir, "/Kraken2_Nanodb/")), "t", med, "G")
 
     com = []
     kra = "{}_tkraken.txt".format(os.path.join(args.outdir, prefix))
