@@ -8,7 +8,7 @@ Getting this data is the main objective, but a multitude of tools are build in t
 
 ## Installation
 
-ResitNanome contains ost of what is needed. Only bokeh is to be pre-installed for the use of nanoQC.
+ResitNanome contains most of what is needed. Only bokeh is to be pre-installed for the use of nanoQC.
 
 To install Resistnanome through Unix:
 
