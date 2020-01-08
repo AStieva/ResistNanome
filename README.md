@@ -38,7 +38,7 @@ The output from this will be a pdf file which gives the top 10 reads and a tab s
 ## Options
 
 ```
-usage: ./wrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [options]
+usage: ./ResistNanomeWrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ [options]
 
 -h, --help        Show this help message and exit
 -i, --inp         Set the input files, in fastq or fastq.gz format
