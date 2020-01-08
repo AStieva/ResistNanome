@@ -10,7 +10,7 @@ Getting this data is the main objective, but a multitude of tools are build in t
 
 ResitNanome contains most of what is needed. Only bokeh is to be pre-installed for the use of nanoQC.
 
-To install Resistnanome through Unix:
+To install ResistNanome through Unix:
 
 ```
 git clone https://github.com/AStieva/ResistNanome
@@ -31,7 +31,7 @@ If you want to use nanoQC, please install bokeh like this: `pip3 install bokeh`
 
 When calling the program, two arguments are mandatory, so should always be given: `--inp` or `-i` and `--outdir` or `-o`. After putting down these arguments, the (path to the) input data and the path to the output folder should be put in, respectively. For example when only calling the resistome  analysis: 
 
-`./Resistnanomewrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ --resistome`
+`./ResistNanomewrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ --resistome`
 
 The output from this will be a pdf file which gives the top 10 reads and a tab seperated values file with all information. However, the output doesn't give any information about the quality of the reads and doesn't filter out anything.
 
