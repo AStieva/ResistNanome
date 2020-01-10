@@ -29,7 +29,7 @@ If you want to use nanoQC, please install bokeh like this: `pip3 install bokeh`
 
 ## Usage
 
-When calling the program, two arguments are mandatory, so should always be given: `--inp` or `-i` and `--outdir` or `-o`. After putting down these arguments, the (path to the) input data and the path to the output folder should be put in, respectively. For example when only calling the resistome  analysis: 
+When calling the program, two arguments are mandatory, so should always be given: `--inp` (or `-i`) and `--outdir` (or `-o`). After putting down these arguments, the (path to the) input data and the path to the output folder should be put in, respectively. For example when only calling the resistome  analysis: 
 
 `./ResistNanomewrapper.py --inp file.fastq.gz --outdir /path/to/output/folder/ --resistome`
 
