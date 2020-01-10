@@ -133,4 +133,5 @@ Tool for k-mer alignment. Often used for determenation of the resistome.
 [Bitbucket](https://bitbucket.org/genomicepidemiology/kma/src/master/)
 
 -------------------------------------------
-##### This page is still under construction
+
+###### Developed during my internship at Universiteit Utrecht
