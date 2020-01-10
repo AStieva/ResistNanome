@@ -134,4 +134,4 @@ Tool for k-mer alignment. Often used for determenation of the resistome.
 
 -------------------------------------------
 
-###### Developed during my internship at Universiteit Utrecht
+###### Developed during my internship at Universiteit Utrecht under the guidance of Dr. A.L. Zomer
