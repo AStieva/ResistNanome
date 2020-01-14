@@ -67,11 +67,12 @@ def resistome(inp, db, phred):
     f.write(str(dt) + "\t\t(res) Writing fasta output file\n")
     f.close()
     matchseq = []
-    for t in match:
-        for record in SeqIO.parse(inp, "fastq"):
-            if re.search(record.id, t):
-                matchseq.append(t + ":" + str(record.seq))
+
     if args.repN:
+        for t in match:
+            for record in SeqIO.parse(inp, "fastq"):
+                if re.search(record.id, t):
+                    matchseq.append(t + ":" + str(record.seq))
         # Replacing the bases of the resistome gene with 'N'
         filtered = os.path.join(args.outdir, "temp_resistome.fasta")
         filt = []
@@ -93,11 +94,12 @@ def resistome(inp, db, phred):
         # Writing a fastq file with only resistome-files
         filtered = os.path.join(args.outdir, "temp_resistome.fastq")
         filt = []
-        for n in matchseq:
+        for n in match:
             N = n.split(":")
             for i in SeqIO.parse(inp, "fastq"):
                 if N[0] == i.id:
                     filt.append(i)
+                    break
         for f in filt:
             with open(filtered, "a") as handle:
                 SeqIO.write(f, handle, "fastq")
@@ -122,7 +124,7 @@ def resistome(inp, db, phred):
     f.close()
 
     clas = []
-    kra = "{}_rkraken.txt".format(os.path.join(args.outdir, prefix))
+    kra = "temp_{}_rkraken.txt".format(os.path.join(args.outdir, prefix))
     with open(kra, "rt") as csvf:
         reader = csv.reader(csvf, delimiter="\t")
         for row in reader:
@@ -139,9 +141,9 @@ def resistome(inp, db, phred):
     resinfo = []
     resduo = []
     if type(args.lvl) is list:
-        bra = "{}_S_rbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "temp_{}_S_rbracken.txt".format(os.path.join(args.outdir, prefix))
     else:
-        bra = "{}_rbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "temp_{}_rbracken.txt".format(os.path.join(args.outdir, prefix))
     for t in resis:
         tt = t.split(":")
         ID = tt[2].split(" ")
