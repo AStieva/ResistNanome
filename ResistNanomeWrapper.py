@@ -262,7 +262,7 @@ def resistome():
     resistome(indata, os.path.abspath(os.path.join(lib_dir, "KMA_ResFinder")), args.phred)
     resist_indata = os.path.join(args.outdir, "temp_resistome.fasta")
     if not os.path.isfile(resist_indata):
-        print("There wasn't any antibiotic resistance found!")
+        print("No antibiotic resistance found!")
 
 def taxonomy():
     f = open(RNlog, "a")
