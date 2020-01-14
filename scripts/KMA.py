@@ -15,16 +15,16 @@ def resistome(inp, db, phred):
     # Filtering with KMA
     if phred == 0:
         os.system("{} -i {} -o {} -t_db {} -bcNano".format(os.path.join(tool_dir, "KMA"), inp,
-                                                           os.path.join(args.outdir, prefix + "_kma"), db))
+                                                           os.path.join(args.outdir, "temp_" + prefix + "_kma"), db))
     else:
         os.system("{} -i {} -o {} -t_db {} -bcNano -mp {}".format(os.path.join(tool_dir, "KMA"), inp,
-                                                                  os.path.join(args.outdir, prefix + "_kma"), db,
+                                                                  os.path.join(args.outdir, "temp_" + prefix + "_kma"), db,
                                                                   phred))
 
     # Creating lists with needed information, reads are in each, to link them
     resreads = []
     info = []  # reads, score, gene, start, stop
-    res = os.path.join(args.outdir, prefix + "_kma.frag.gz")
+    res = os.path.join(args.outdir, "temp_" + prefix + "_kma.frag.gz")
     with gzip.open(res, "rt") as csvfile:
         resread = csv.reader(csvfile, delimiter="\t")
         for row in resread:
@@ -64,14 +64,15 @@ def resistome(inp, db, phred):
     # Writing a fastq file with only resistome-files, possibly taking out the resistant genes
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
-    f.write(str(dt) + "\t\t(res) Writing fasta output file\n")
+    f.write(str(dt) + "\t\t(res) Writing fastq/fasta output file\n")
     f.close()
     matchseq = []
-    for t in match:
-        for record in SeqIO.parse(inp, "fastq"):
-            if re.search(record.id, t):
-                matchseq.append(t + ":" + str(record.seq))
+
     if args.repN:
+        for t in match:
+            for record in SeqIO.parse(inp, "fastq"):
+                if re.search(record.id, t):
+                    matchseq.append(t + ":" + str(record.seq))
         # Replacing the bases of the resistome gene with 'N'
         filtered = os.path.join(args.outdir, "temp_resistome.fasta")
         filt = []
@@ -93,11 +94,12 @@ def resistome(inp, db, phred):
         # Writing a fastq file with only resistome-files
         filtered = os.path.join(args.outdir, "temp_resistome.fastq")
         filt = []
-        for n in matchseq:
+        for n in match:
             N = n.split(":")
             for i in SeqIO.parse(inp, "fastq"):
                 if N[0] == i.id:
                     filt.append(i)
+                    break
         for f in filt:
             with open(filtered, "a") as handle:
                 SeqIO.write(f, handle, "fastq")
@@ -122,7 +124,7 @@ def resistome(inp, db, phred):
     f.close()
 
     clas = []
-    kra = "{}_rkraken.txt".format(os.path.join(args.outdir, prefix))
+    kra = "temp_{}_rkraken.txt".format(os.path.join(args.outdir, prefix))
     with open(kra, "rt") as csvf:
         reader = csv.reader(csvf, delimiter="\t")
         for row in reader:
@@ -139,9 +141,9 @@ def resistome(inp, db, phred):
     resinfo = []
     resduo = []
     if type(args.lvl) is list:
-        bra = "{}_S_rbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "temp_{}_S_rbracken.txt".format(os.path.join(args.outdir, prefix))
     else:
-        bra = "{}_rbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "temp_{}_rbracken.txt".format(os.path.join(args.outdir, prefix))
     for t in resis:
         tt = t.split(":")
         ID = tt[2].split(" ")
@@ -174,7 +176,7 @@ def resistome(inp, db, phred):
         rr.write("{}\t{}\t{}\t{}".format(o[1], o[2], o[3], peround))
         rr.close()
 
-    rlog = os.path.join(args.outdir, "temp_resistome_topout.txt".format(prefix))
+    rlog = os.path.join(args.outdir, "temp_resistome_{}_topout.txt".format(prefix))
     t = open(rlog, "a")
     t.write("Resistome")
     t.write("\nRead\t|\tResistancy gene\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
