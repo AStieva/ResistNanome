@@ -153,7 +153,7 @@ from fpdf import FPDF
 # Function for running kraken2 and bracken
 def profiling(db, inp, part, id):
     print("Running Kraken2 for {}".format(part))
-    os.system("{} --db {} --report {}_{}kreport.txt --threads {} --use-names --output {}_{}kraken.txt {}".format(
+    os.system("{} --db {} --report temp_{}_{}kreport.txt --threads {} --use-names --output temp_{}_{}kraken.txt {}".format(
         os.path.join(tool_dir, "Kraken/kraken2"), db, os.path.join(args.outdir, prefix), id, args.threads,
         os.path.join(args.outdir, prefix), id, inp))
     
@@ -161,7 +161,7 @@ def abundance(db, id, len, level):
     if isinstance(level, list):
         for lvl in level:
             os.system(
-                "{} -d {} -i {}_{}kreport.txt -o {}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"),
+                "{} -d {} -i temp_{}_{}kreport.txt -o temp_{}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"),
                                                                                       db,
                                                                                       os.path.join(args.outdir, prefix),
                                                                                       lvl + "_" + id,
@@ -169,7 +169,7 @@ def abundance(db, id, len, level):
                                                                                       id, len, lvl))
     else:
         os.system(
-            "{} -d {} -i {}_{}kreport.txt -o {}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"), db,
+            "{} -d {} -i temp_{}_{}kreport.txt -o temp_{}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"), db,
                                                                                   os.path.join(args.outdir, prefix), id,
                                                                                   os.path.join(args.outdir, prefix), id,
                                                                                   len, level))
@@ -274,7 +274,7 @@ def taxonomy():
     abundance(os.path.abspath(os.path.join(lib_dir, "/Kraken2_Nanodb/")), "t", med, "G")
 
     com = []
-    kra = "{}_tkraken.txt".format(os.path.join(args.outdir, prefix))
+    kra = "temp_{}_tkraken.txt".format(os.path.join(args.outdir, prefix))
     with open(kra, "rt") as csvf:
         reader = csv.reader(csvf, delimiter="\t")
         for read in reader:
@@ -284,9 +284,9 @@ def taxonomy():
     tax = []
     taxduo = []
     if type(args.lvl) is list:
-        bra = "{}_S_tbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "temp_{}_S_tbracken.txt".format(os.path.join(args.outdir, prefix))
     else:
-        bra = "{}_tbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "temp_{}_tbracken.txt".format(os.path.join(args.outdir, prefix))
     for b in com:
         tt = b.split(":")
         ID = tt[1].split(" ")
