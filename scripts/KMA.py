@@ -15,16 +15,16 @@ def resistome(inp, db, phred):
     # Filtering with KMA
     if phred == 0:
         os.system("{} -i {} -o {} -t_db {} -bcNano".format(os.path.join(tool_dir, "KMA"), inp,
-                                                           os.path.join(args.outdir, prefix + "_kma"), db))
+                                                           os.path.join(args.outdir, "temp_" + prefix + "_kma"), db))
     else:
         os.system("{} -i {} -o {} -t_db {} -bcNano -mp {}".format(os.path.join(tool_dir, "KMA"), inp,
-                                                                  os.path.join(args.outdir, prefix + "_kma"), db,
+                                                                  os.path.join(args.outdir, "temp_" + prefix + "_kma"), db,
                                                                   phred))
 
     # Creating lists with needed information, reads are in each, to link them
     resreads = []
     info = []  # reads, score, gene, start, stop
-    res = os.path.join(args.outdir, prefix + "_kma.frag.gz")
+    res = os.path.join(args.outdir, "temp_" + prefix + "_kma.frag.gz")
     with gzip.open(res, "rt") as csvfile:
         resread = csv.reader(csvfile, delimiter="\t")
         for row in resread:
@@ -176,7 +176,7 @@ def resistome(inp, db, phred):
         rr.write("{}\t{}\t{}\t{}".format(o[1], o[2], o[3], peround))
         rr.close()
 
-    rlog = os.path.join(args.outdir, "temp_resistome_topout.txt".format(prefix))
+    rlog = os.path.join(args.outdir, "temp_resistome_{}_topout.txt".format(prefix))
     t = open(rlog, "a")
     t.write("Resistome")
     t.write("\nRead\t|\tResistancy gene\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
