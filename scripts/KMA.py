@@ -64,7 +64,7 @@ def resistome(inp, db, phred):
     # Writing a fastq file with only resistome-files, possibly taking out the resistant genes
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
-    f.write(str(dt) + "\t\t(res) Writing fasta output file\n")
+    f.write(str(dt) + "\t\t(res) Writing fastq/fasta output file\n")
     f.close()
     matchseq = []
 
