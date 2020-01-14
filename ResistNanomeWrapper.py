@@ -276,6 +276,10 @@ def taxonomy():
     med = int(med_round(indata))
     abundance(os.path.abspath(os.path.join(lib_dir, "/Kraken2_Nanodb/")), "t", med, "G")
 
+    f = open(RNlog, "a")
+    dt = datetime.datetime.now()
+    f.write(str(dt) + "\t\t(tax) Start Bracken\n")
+    f.close()
     com = []
     kra = "temp_{}_tkraken.txt".format(os.path.join(args.outdir, prefix))
     with open(kra, "rt") as csvf:
