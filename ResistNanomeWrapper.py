@@ -265,7 +265,7 @@ def resistome():
     else: 
         resist_indata = os.path.join(args.outdir, "temp_resistome.fastq")
     if not os.path.isfile(resist_indata):
-        print("There was'n any antibiotic resistance found!")
+        print("No antibiotic resistance found!")
 
 def taxonomy():
     f = open(RNlog, "a")
