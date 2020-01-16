@@ -9,7 +9,7 @@ from PyPDF2 import PdfFileMerger, PdfFileReader
 from __main__ import *
 
 def nanoqc(name, tool, inp):
-    QCinput = os.path.normpath(os.path.join(args.outdir, "temp_{}/".format(name)))
+    QCinput = os.path.normpath(os.path.join(args.outdir, "temp_{}_{}/".format(prefix, name)))
     if not os.path.exists(QCinput):
         os.mkdir(QCinput)
 
@@ -28,7 +28,7 @@ def nanoqc(name, tool, inp):
 
 def nanoqcimage(name, tool, inp):
 
-    QCinput = os.path.normpath(os.path.join(args.outdir, "temp_{}/".format(name)))
+    QCinput = os.path.normpath(os.path.join(args.outdir, "temp_{}_{}/".format(prefix, name)))
     if not os.path.exists(QCinput):
         os.mkdir(QCinput)
 
