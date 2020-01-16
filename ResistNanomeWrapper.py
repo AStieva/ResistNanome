@@ -356,7 +356,7 @@ elif args.taxonomy and not args.demux and not args.resistome:
     taxonomy()
 
 # Merging all output-files to one PDF
-if not args.demux:
+if not args.demux and (args.resistome or args.taxonomy):
     outlist = sorted(os.listdir(args.outdir))
     Pdf = []
     for i in outlist:
