@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser(description = "A pipeline to make it easy to ex
 parser.add_argument("--inp", "-i",
                     action = "store",
                     required = True,
-                    help = "Place here the input files, in fastq or fastq.gz format")
+                    help = "Set the input file, in fastq or fastq.gz format, please make sure to input the whole path")
 parser.add_argument("--outdir", "-o",
                     action = "store",
                     required = True,
