@@ -281,7 +281,7 @@ def taxonomy():
     f.write(str(dt) + "\t\t(tax) Start Bracken\n")
     f.close()
     com = []
-    kra = "temp_{}_tkraken.txt".format(os.path.join(args.outdir, prefix))
+    kra = "{}_tkraken.txt".format(os.path.join(args.outdir, "temp_" + prefix))
     with open(kra, "rt") as csvf:
         reader = csv.reader(csvf, delimiter="\t")
         for read in reader:
@@ -291,9 +291,9 @@ def taxonomy():
     tax = []
     taxduo = []
     if type(args.lvl) is list:
-        bra = "temp_{}_S_tbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "{}_S_tbracken.txt".format(os.path.join(args.outdir, "temp_" + prefix))
     else:
-        bra = "temp_{}_tbracken.txt".format(os.path.join(args.outdir, prefix))
+        bra = "{}_tbracken.txt".format(os.path.join(args.outdir, "temp_" + prefix))
     for b in com:
         tt = b.split(":")
         ID = tt[1].split(" ")
