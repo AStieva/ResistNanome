@@ -74,7 +74,7 @@ def resistome(inp, db, phred):
                 if re.search(record.id, t):
                     matchseq.append(t + ":" + str(record.seq))
         # Replacing the bases of the resistome gene with 'N'
-        filtered = os.path.join(args.outdir, "temp_resistome.fasta")
+        filtered = os.path.join(args.outdir, "temp_{}_resistome.fasta".format(prefix))
         filt = []
         for n in matchseq:
             i = n.split(":")
@@ -92,7 +92,7 @@ def resistome(inp, db, phred):
                 handle.write(">{}\n{}\n".format(val[1], val[0]))
     else:
         # Writing a fastq file with only resistome-files
-        filtered = os.path.join(args.outdir, "temp_resistome.fastq")
+        filtered = os.path.join(args.outdir, "temp_{}_resistome.fastq".format(prefix))
         filt = []
         for n in match:
             N = n.split(":")

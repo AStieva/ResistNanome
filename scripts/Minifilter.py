@@ -12,8 +12,8 @@ from __main__ import *
 def unmapped(ref, inp):
     print("Taking out reads with vertebrate DNA")
 
-    sam = os.path.join(args.outdir, "temp_novert.sam")    
-    filtered = os.path.join(args.outdir, "temp_novert.fastq")
+    sam = os.path.join(args.outdir, "temp_{}_novert.sam".format(prefix))    
+    filtered = os.path.join(args.outdir, "temp_{}_novert.fastq".format(prefix))
 
     # Using minimap2 to align reads to vertebrate db
     # Using pysam to filter and translate to fastq

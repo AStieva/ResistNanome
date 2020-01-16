@@ -153,25 +153,25 @@ from fpdf import FPDF
 # Function for running kraken2 and bracken
 def profiling(db, inp, part, id):
     print("Running Kraken2 for {}".format(part))
-    os.system("{} --db {} --report temp_{}_{}kreport.txt --threads {} --use-names --output temp_{}_{}kraken.txt {}".format(
-        os.path.join(tool_dir, "Kraken/kraken2"), db, os.path.join(args.outdir, prefix), id, args.threads,
-        os.path.join(args.outdir, prefix), id, inp))
+    os.system("{} --db {} --report {}_{}kreport.txt --threads {} --use-names --output {}_{}kraken.txt {}".format(
+        os.path.join(tool_dir, "Kraken/kraken2"), db, os.path.join(args.outdir, "temp_" + prefix), id, args.threads,
+        os.path.join(args.outdir, "temp_" + prefix), id, inp))
     
 def abundance(db, id, len, level):
     if isinstance(level, list):
         for lvl in level:
             os.system(
-                "{} -d {} -i temp_{}_{}kreport.txt -o temp_{}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"),
+                "{} -d {} -i {}_{}kreport.txt -o {}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"),
                                                                                       db,
-                                                                                      os.path.join(args.outdir, prefix),
+                                                                                      os.path.join(args.outdir, "temp_" + prefix),
                                                                                       lvl + "_" + id,
-                                                                                      os.path.join(args.outdir, prefix),
+                                                                                      os.path.join(args.outdir, "temp_" + prefix),
                                                                                       id, len, lvl))
     else:
         os.system(
-            "{} -d {} -i temp_{}_{}kreport.txt -o temp_{}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"), db,
-                                                                                  os.path.join(args.outdir, prefix), id,
-                                                                                  os.path.join(args.outdir, prefix), id,
+            "{} -d {} -i {}_{}kreport.txt -o {}_{}bracken.txt -r {} -l {}".format(os.path.join(tool_dir, "bracken"), db,
+                                                                                  os.path.join(args.outdir, "temp_" + prefix), id,
+                                                                                  os.path.join(args.outdir, "temp_" + prefix), id,
                                                                                   len, level))
 
 def med_round(data):
@@ -216,7 +216,7 @@ if args.filtlong and not args.demux:
     f.close()
     from Filtlong import filtlong
     filtlong(os.path.join(tool_dir, "filtlong"), indata, args.minlen)
-    indata = os.path.join(args.outdir, "temp_filtlong.fastq")
+    indata = os.path.join(args.outdir, "temp_{}_filtlong.fastq".format(prefix))
 
 # Running second QC, if asked for QC and asked for demultiplexing or filtlong, for comparison
 if args.QC and (args.demux or args.filtlong):
@@ -250,7 +250,7 @@ if args.host and not args.demux:
     f.close()
     from Minifilter import unmapped
     unmapped(os.path.abspath(os.path.join(lib_dir, "/mash_db/")), indata)
-    indata = os.path.join(args.outdir, "temp_novert.fastq")
+    indata = os.path.join(args.outdir, "temp_{}_novert.fastq".format(prefix))
 
 # Running resistome analysis and/or community profiling, in multithreading
 def resistome():
@@ -261,9 +261,9 @@ def resistome():
     from KMA import resistome
     resistome(indata, os.path.abspath(os.path.join(lib_dir, "KMA_ResFinder")), args.phred)
     if args.repN:
-        resist_indata = os.path.join(args.outdir, "temp_resistome.fasta")
+        resist_indata = os.path.join(args.outdir, "temp_{}_resistome.fasta".format(prefix))
     else: 
-        resist_indata = os.path.join(args.outdir, "temp_resistome.fastq")
+        resist_indata = os.path.join(args.outdir, "temp_{}_resistome.fastq".format(prefix))
     if not os.path.isfile(resist_indata):
         print("No antibiotic resistance found!")
 
@@ -327,7 +327,7 @@ def taxonomy():
         tt.write("{}\t{}\t{}\n".format(o[1], o[2], peround))
         tt.close()            
 
-    tlog = os.path.join(args.outdir, "temp_taxonomy_topout.txt")
+    tlog = os.path.join(args.outdir, "temp_{}_taxonomy_topout.txt".format(prefix))
     t = open(tlog, "a")
     t.write("Taxonomy")
     t.write("\nRead\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
@@ -356,7 +356,7 @@ elif args.taxonomy and not args.demux and not args.resistome:
     taxonomy()
 
 # Merging all output-files to one PDF
-if not args.demux:
+if not args.demux and (args.resistome or args.taxonomy):
     outlist = sorted(os.listdir(args.outdir))
     Pdf = []
     for i in outlist:
