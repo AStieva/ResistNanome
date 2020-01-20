@@ -67,6 +67,10 @@ def resistome(inp, db, phred):
     f.write(str(dt) + "\t\t(res) Writing fastq/fasta output file\n")
     f.close()
     matchseq = []
+    qhandle = open(inp, "rU")
+    h = SeqIO.parse(qhandle, "fastq")
+    qlist = [f for f in sorted(h, key = lambda x : x.id)]
+    matchin = sorted(match)
 
     if args.repN:
         for t in match:
@@ -94,11 +98,13 @@ def resistome(inp, db, phred):
         # Writing a fastq file with only resistome-files
         filtered = os.path.join(args.outdir, "temp_{}_resistome.fastq".format(prefix))
         filt = []
-        for n in match:
+        c = 0
+        for n in matching:
             N = n.split(":")
-            for i in SeqIO.parse(inp, "fastq"):
+            for count, i in enumerate(qlist):
                 if N[0] == i.id:
                     filt.append(i)
+                    c = count
                     break
         for f in filt:
             with open(filtered, "a") as handle:
