@@ -81,6 +81,11 @@ parser.add_argument("--taxonomy", "-cs",
                     action = "store_true",
                     default = False,
                     help = "Execute the bacterial community screening, output set with --lvl")
+parser.add_argument("--threading",
+                    default = False,
+                    required = False,
+                    action = "store_true",
+                    help = "Option to turn on threading. Both taxonomy and resistome will run at the same time, it uses more memory but is faster")
 parser.add_argument("--gz", "-gz",
                     action = "store_true",
                     default = False,
@@ -252,7 +257,7 @@ if args.host and not args.demux:
     unmapped(os.path.abspath(os.path.join(lib_dir, "/mash_db/")), indata)
     indata = os.path.join(args.outdir, "temp_{}_novert.fastq".format(prefix))
 
-# Running resistome analysis and/or community profiling, in multithreading
+# Running resistome analysis and/or community profiling, possibly in multithreading
 def resistome():
     f = open(RNlog, "a")
     dt = datetime.datetime.now()
@@ -317,22 +322,24 @@ def taxonomy():
     tt.write("Read\tName (tax ID)\tPercentage of bacteria\n")
     tt.close()
     taxinfo = []
-    for e, inf in enumerate(tax):
+    for inf in tax:
         o = inf.split(":")
-        perc = float(o[-1]) * 100
+        perc = float(o[0]) * 100
         peround = "{0:.6f}".format(perc)
-        if e <= 9:
-            taxinfo.append("{}\n\t\t{} - {}%\n".format(o[1], o[2], peround))
+        res = "{} - {}%\n".format(o[2], peround) 
+        if res not in taxinfo:
+            taxinfo.append(res)
         tt = open(toutput, "a")
         tt.write("{}\t{}\t{}\n".format(o[1], o[2], peround))
-        tt.close()            
+        tt.close())            
 
     tlog = os.path.join(args.outdir, "temp_{}_taxonomy_topout.txt".format(prefix))
     t = open(tlog, "a")
-    t.write("Taxonomy")
-    t.write("\nRead\n\t\tName (tax ID) - Percentage out of bacteria\n\n")
-    for i in taxinfo:
-        t.write(i)
+    t.write("Taxonomy\n")
+    t.write("Name (tax ID) - Percentage out of bacteria\ntotal = {} bacteria\n\n".format(len(taxinfo)))
+    for e, i in enumerate(taxinfo):
+        if e <= 9:
+            t.write(i)
     t.close()
 
     f = open(RNlog, "a")
@@ -340,7 +347,7 @@ def taxonomy():
     f.write(str(dt) + "\tTaxonomy finished\n")
     f.close()
 
-if args.resistome and args.taxonomy and not args.demux:
+if args.threading and args.resistome and args.taxonomy and not args.demux:
     # Creating threads
     t1 = threading.Thread(target = resistome())
     t2 = threading.Thread(target = taxonomy())
@@ -350,6 +357,9 @@ if args.resistome and args.taxonomy and not args.demux:
     # Nothing else will start 'till both are done
     t1.join()
     t2.join()
+elif args.resistome and args.taxonomy and not (args.demux and args. threading):
+    resistome()
+    taxonomy()
 elif args.resistome and not args.demux and not args.taxonomy:
     resistome()
 elif args.taxonomy and not args.demux and not args.resistome:
