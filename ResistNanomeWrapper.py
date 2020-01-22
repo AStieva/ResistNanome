@@ -319,7 +319,7 @@ def taxonomy():
     taxinfo = []
     for e, inf in enumerate(tax):
         o = inf.split(":")
-        perc = float(o[-1]) / 100
+        perc = float(o[-1]) * 100
         peround = "{0:.6f}".format(perc)
         if e <= 9:
             taxinfo.append("{}\n\t\t{} - {}%\n".format(o[1], o[2], peround))
