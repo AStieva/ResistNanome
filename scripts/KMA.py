@@ -174,7 +174,7 @@ def resistome(inp, db, phred):
     resi = []
     for e, inf in enumerate(resinfo):
         o = inf.split(":")
-        perc = float(o[0]) / 100
+        perc = float(o[0]) * 100
         peround = "{0:.6f}".format(perc)
         if e<= 9:
             resi.append("{}\t|\t{}\n\t\t{} - {}%\n".format(o[1], o[2], o[3], peround))
