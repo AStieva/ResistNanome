@@ -57,6 +57,7 @@ usage: ./ResistNanomeWrapper.py --inp file.fastq.gz --outdir /path/to/output/fol
 -ar, --resistome  Execute the resistome analysis/antibiotic resistance screening
 -N, --repN        Replace the resistancy gene with a series of N. This can take a long time (up to multiple days for a few GB data)
 --phred           The option of giving a minimum phred score for resistome filtering
+--threading       Option to turn on threading. Both taxonomy and resistome will run at the same time, it uses more memory but is faster
 -cs, --taxonomy   Execute the bacterial community screening
 -gz, --gz         gzip-ing the fastq file(s) left at the end
 ```
